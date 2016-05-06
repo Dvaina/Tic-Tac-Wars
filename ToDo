@@ -1,12 +1,12 @@
 ToDos :
-- nextWave delay at start
 - wave transition
 - mag UI
 - power-up spawner
 - power-up UI
 - boss arena
-- 
+- following camera
 
 Done:
 
 - main menu background
+- nextWave delay at start
