@@ -111,6 +111,8 @@ public class Spawner : MonoBehaviour {
 	}
 
 	void NextWave () {
+		// first enemy in wave gets an extra delay
+		nextSpawnTime += 3;
 		if (currentWaveNumber > 0) {
 			AudioManager.instance.PlaySound2D ("Level Complete");
 		}

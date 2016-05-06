@@ -2,8 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MapGenerator : MonoBehaviour
-{
+public class MapGenerator : MonoBehaviour {
 
 	public Map[] maps;
 	public int mapIndex;
@@ -28,19 +27,16 @@ public class MapGenerator : MonoBehaviour
 
 	Map currentMap;
 
-	void Awake ()
-	{
+	void Awake () {
 		FindObjectOfType<Spawner> ().OnNewWave += OnNewWave;
 	}
 
-	void OnNewWave (int waveNumber)
-	{
+	void OnNewWave (int waveNumber) {
 		mapIndex = waveNumber - 1;
 		GenerateMap ();
 	}
 
-	public void GenerateMap ()
-	{
+	public void GenerateMap () {
 		currentMap = maps [mapIndex];
 		tileMap = new Transform[currentMap.mapSize.x, currentMap.mapSize.y];
 		System.Random prng = new System.Random (currentMap.seed);
@@ -131,8 +127,7 @@ public class MapGenerator : MonoBehaviour
 		
 	}
 
-	bool MapIsFullyAccessable (bool[,] obstacleMap, int currentObstacleCount)
-	{
+	bool MapIsFullyAccessable (bool[,] obstacleMap, int currentObstacleCount) {
 		bool[,] mapFlags = new bool[obstacleMap.GetLength (0), obstacleMap.GetLength (1)];
 		Queue<Coord> queue = new Queue<Coord> ();
 		queue.Enqueue (currentMap.mapCentre);
@@ -166,13 +161,11 @@ public class MapGenerator : MonoBehaviour
 		return targetAccessibleTileCount == accessibleTileCount;
 	}
 
-	Vector3 CoordToPosition (int x, int y)
-	{
+	Vector3 CoordToPosition (int x, int y) {
 		return new Vector3 (-currentMap.mapSize.x / 2f + .5f + x, 0, -currentMap.mapSize.y / 2f + .5f + y) * tileSize;
 	}
 
-	public Transform GetTileFromPosition (Vector3 position)
-	{
+	public Transform GetTileFromPosition (Vector3 position) {
 		int x = Mathf.RoundToInt (position.x / tileSize + (currentMap.mapSize.x - 1) / 2f);
 		int y = Mathf.RoundToInt (position.z / tileSize + (currentMap.mapSize.y - 1) / 2f);
 		x = Mathf.Clamp (x, 0, tileMap.GetLength (0) - 1);
@@ -180,46 +173,47 @@ public class MapGenerator : MonoBehaviour
 		return tileMap [x, y];
 	}
 
-	public Coord GetRandomCoord ()
-	{
+	public Coord GetRandomCoord () {
 		Coord randomCoord = shuffledTileCoords.Dequeue ();
 		shuffledTileCoords.Enqueue (randomCoord);
 		return randomCoord;
 	}
 
-	public Transform GetRandomOpenTile ()
-	{
+	public Transform GetRandomOpenTile () {
 		Coord randomCoord = shuffledOpenTileCoords.Dequeue ();
 		shuffledOpenTileCoords.Enqueue (randomCoord);
 		return tileMap [randomCoord.x, randomCoord.y];
 	}
 
 	[System.Serializable]
-	public struct Coord
-	{
+	public struct Coord {
 		public int x;
 		public int y;
 
-		public Coord (int _x, int _y)
-		{
+		public Coord (int _x, int _y) {
 			x = _x;
 			y = _y;
 		}
 
-		public static bool operator == (Coord c1, Coord c2)
-		{
+		public static bool operator == (Coord c1, Coord c2) {
 			return c1.x == c2.x && c1.y == c2.y;
 		}
 
-		public static bool operator != (Coord c1, Coord c2)
-		{
+		public static bool operator != (Coord c1, Coord c2) {
 			return !(c1 == c2);
+		}
+
+		public override bool Equals (object obj) {
+			return base.Equals (obj);
+		}
+
+		public override int GetHashCode () {
+			return base.GetHashCode ();
 		}
 	}
 
 	[System.Serializable]
-	public class Map
-	{
+	public class Map {
 		public Coord mapSize;
 		[Range (0, 1)]
 		public float obstaclePercent;
